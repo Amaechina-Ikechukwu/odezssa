@@ -1,0 +1,60 @@
+import React, { Component } from "react";
+import "../App.css";
+const colors = require("tailwindcss/colors");
+
+export class Landing extends Component {
+  constructor() {
+    super();
+    this.state = {
+      A: false,
+    };
+  }
+
+  timer = () => {
+    setTimeout(() => {
+      this.setState({
+        A: true,
+      });
+    }, 3000);
+  };
+
+  componentDidMount() {
+    this.timer();
+  }
+
+  render() {
+    return (
+      <div className=" flex flex-col md:flex-row items-center justify-evenly px-4 md:h-full md:w-full lg:h-screen lg:w-full">
+        <div class="bg-odes-img bg-cover flex items-center justify-center sm:w-2/5  w-full h-full border-red-900">
+          <h1 class="font-extrabold text-transparent text-7xl md:text-9xl bg-clip-text bg-gradient-to-r from-red-light to-blue-light h-auto">
+            odezssa
+          </h1>
+        </div>
+
+        <div className="w-2/5 h-full flex flex-col items-center justify-center">
+          {this.state.A === false ? (
+            <div>
+              <div class="flex flex-col items-center ">
+                <h1 className="text-5xl lg:text-8xl">find what you need</h1>
+                <div className="animate-wiggle bg-gradient-to-r from-red-light to-blue-light h-3 w-full  m-10 " />
+                <h3 className="text-4xl  lg:text-7xl ">
+                  RATHER, CREATE YOUR OWN STORE...
+                </h3>
+              </div>
+            </div>
+          ) : (
+            <div class="flex flex-col items-center justify-center w-full  ">
+              <button className="h-10 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-b from-grad to-black">
+                <h1 class="text-white text-5xl   flex items-center justify-center">
+                  connect with google
+                </h1>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Landing;

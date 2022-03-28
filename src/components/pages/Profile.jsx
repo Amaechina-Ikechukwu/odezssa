@@ -17,6 +17,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { app } from "../../firebase";
+import { connect } from "../logics/checkConnect";
 
 export class Profile extends Component {
   constructor(props) {
@@ -69,6 +70,7 @@ export class Profile extends Component {
     //   }
     // };
     this.getUsers();
+    console.log(connect);
   }
 
   Item = styled(Paper)(({ theme }) => ({

@@ -26,7 +26,7 @@ export class Landing extends Component {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log(user);
+        console.log(user.metadata);
         // ...
       })
       .catch((error) => {
@@ -66,7 +66,7 @@ export class Landing extends Component {
   render() {
     return (
       <div className=" flex flex-col md:flex-row items-center justify-evenly px-4 h-screen w-full lg:h-screen lg:w-full">
-        <div class="bg-odes-img bg-cover flex items-center justify-center   w-full h-full border-red-900">
+        <div class="bg-odes-img bg-cover flex items-center justify-center   h-full border-red-900">
           <h1 class="font-extrabold text-transparent text-7xl md:text-9xl bg-clip-text bg-gradient-to-r from-red-light to-blue-light h-auto">
             odezssa
           </h1>
@@ -89,7 +89,7 @@ export class Landing extends Component {
                 onClick={() => this.googlesign()}
                 className="h-10 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-b from-grad to-black"
               >
-                <h1 class="text-white text-5xl   flex items-center justify-center">
+                <h1 class="text-white text-4xl p-4  flex items-center justify-center">
                   connect with google
                 </h1>
               </button>

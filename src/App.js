@@ -15,31 +15,67 @@ import { app } from "./firebase";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 
 function App() {
-  const [user, setUser] = React.useState(Boolean);
+  const [user, setUser] = React.useState();
   React.useEffect(() => {
     console.log(app);
-  });
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setUser(true);
-    } else {
-      setUser(false);
-    }
-  });
-  return (
-    <BrowserRouter>
-      {user ? (
-        <Routes>
-          <Route path="/" element={<Home />} />
 
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      ) : (
-        <Routes>
-          <Route path="/" element={<Landing />} />
-        </Routes>
-      )}
+    onAuthStateChanged(getAuth(), (user) => {
+      console.log(user);
+      setUser(user);
+    });
+  });
+
+  const signed = () => {
+    const auth = getAuth();
+    onAuthStateChanged(getAuth(), (user) => {
+      if (user) {
+        setUser(true);
+        console.log(user);
+      } else {
+        setUser(false);
+      }
+    });
+  };
+
+  // if (user) {
+  //   return (
+  //     <BrowserRouter>
+  //       <Routes>
+  //         <Route path="/" element={<Home />} />
+
+  //         <Route path="/profile" element={<Profile />} />
+  //       </Routes>
+  //     </BrowserRouter>
+  //   );
+  // } else {
+  //   <BrowserRouter>
+  //     <Routes>
+  //       <Route path="/" element={<Landing />} />
+  //     </Routes>
+  //   </BrowserRouter>;
+  // }
+  // return user === false ? (
+
+  // ) : (
+  //   <BrowserRouter>
+  //     <Routes>
+  //       <Route path="/welcome" element={<Landing />} />
+  //     </Routes>
+  //   </BrowserRouter>
+  // );
+  return user == null ? (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+      </Routes>
+    </BrowserRouter>
+  ) : (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </BrowserRouter>
   );
 }

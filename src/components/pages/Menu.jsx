@@ -22,7 +22,14 @@ import { ShoppingBagIcon } from "@heroicons/react/solid";
 import { ViewListIcon } from "@heroicons/react/solid";
 import { ChatIcon } from "@heroicons/react/solid";
 import { ClipboardListIcon, PhoneIcon } from "@heroicons/react/outline";
-import { Link, NavLink, useHistory } from "react-router-dom";
+import {
+  Link,
+  NavLink,
+  useHistory,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 
 const style = {
   position: "absolute",
@@ -57,8 +64,24 @@ const styles = {
 export class Menu extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      redirect: true,
+    };
   }
-  state = {};
+
+  googlesignout = () => {
+    var auth = getAuth();
+    signOut(auth)
+      .then((mssg) => {
+        console.log(mssg);
+        // Sign-out successful.
+
+        this.state.redirect && <Navigate to="/" replace={true} />;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   render() {
     return (
       <Box className=" p-2 lg:border-r-2 flex flex-row   lg:flex-col items-center justify-around  md:items-center    ">
@@ -130,7 +153,10 @@ export class Menu extends Component {
           <Divider></Divider>
 
           <Box className="p-2 w-full bg-gray-100 rounded-lg w-full mt-3 hidden lg:block">
-            <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
+            <button
+              onClick={() => this.googlesignout()}
+              className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full "
+            >
               log out
             </button>
             <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
@@ -138,7 +164,7 @@ export class Menu extends Component {
             </button>
           </Box>
 
-          <NavLink to="/user/profile">
+          <NavLink to="/profile">
             <Box
               display="flex"
               flexDirection={"column"}

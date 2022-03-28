@@ -7,6 +7,7 @@ import Tab from "@mui/material/Tab";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
+import { getAuth } from "firebase/auth";
 
 export class Profile extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ export class Profile extends Component {
     color: theme.palette.text.secondary,
   }));
   render() {
+    var profile = getAuth().currentUser;
     return (
       <Box className="h-screen">
         <Box>
@@ -29,7 +31,7 @@ export class Profile extends Component {
             className="flex  flex-col items-center justify-center bg-gradient-to-r from-red-light to-blue-light  p-2"
           >
             <Box className="flex-col items-center justify-center ">
-              <p className="text-6xl text-white"> {"profile.Fullname"}</p>
+              <p className="text-6xl text-white"> {profile.displayName}</p>
             </Box>
           </Box>
         </Box>
@@ -81,6 +83,7 @@ export class Profile extends Component {
               sx={{ width: "150px", height: "150px" }}
               className=" my-2"
               alt="AI"
+              src={profile.photoURL}
             />
           </Divider>
           <div className="px-1">
@@ -92,7 +95,7 @@ export class Profile extends Component {
             <Box className=" flex flex-col w-full  text-gray-400">
               <div className="flex justify-around w-full h-full mb-2">
                 <p className="w-3/5">Email </p>{" "}
-                <p className="w-1/5 break-words"> {"profile.email"}</p>
+                <p className="w-1/5 break-words"> {profile.email}</p>
               </div>
               <div className="flex justify-around w-full h-full mb-2">
                 <p className="w-3/5">Country </p>{" "}
@@ -104,7 +107,7 @@ export class Profile extends Component {
               </div>
               <div className="flex justify-around w-full mb-2">
                 <p className="w-3/5">Phone </p>{" "}
-                <p className="w-1/5"> {"profile.phone"}</p>
+                <p className="w-1/5"> {profile.phoneNumber}</p>
               </div>
               <div className="flex justify-around w-full mb-2">
                 <p className="w-3/5">Address </p>{" "}

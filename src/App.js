@@ -23,6 +23,10 @@ import {
   set,
   serverTimestamp,
 } from "firebase/database";
+import Market from "./components/Activity/Market";
+import Menu from "./components/pages/Menu";
+import SideBar from "./components/pages/Sidebar";
+import VisitProfile from "./components/products/VisitProfile";
 
 function App() {
   const [user, setUser] = React.useState();
@@ -85,18 +89,37 @@ function App() {
     });
   };
 
-  if (user && isConnected) {
+  if (user) {
     return (
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
+        <div className="flex flex-col lg:flex-row justify-between h-screen">
+          <Menu />
+          <div className="overflow-auto w-full">
+            {isConnected === false ? (
+              <div className="bg-red-300 p-2 rounded-md">
+                <p className="text-red-600 text-sm">
+                  {" "}
+                  not connected, it will automatically in a few seconds connect
+                  once there is internet (one of our security measures to keep
+                  your activity safe)
+                </p>{" "}
+              </div>
+            ) : null}
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/market" element={<Market />} />
+              <Route path="/vprofile" element={<VisitProfile />} />
+            </Routes>
+          </div>
+
+          <div className="w-40">
+            <SideBar />
+          </div>
+        </div>
       </BrowserRouter>
     );
-  } else if (user && isConnected === false) {
-    return <div>not connected</div>;
   } else if (user === null) {
     return (
       <BrowserRouter>

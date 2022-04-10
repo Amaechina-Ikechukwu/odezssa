@@ -78,22 +78,7 @@ class Home extends Component {
   };
 
   render() {
-    console.log(getAuth().currentUser.displayName);
-    if (this.state.isConnected) {
-      return (
-        <div className="flex justify-between h-screen">
-          <Menu />
-          <div className="w-2/3">
-            {!this.state.isConnected && (
-              <div>you are not connected to the interent</div>
-            )}
-          </div>
-          <SideBar />
-        </div>
-      );
-    } else {
-      return <div>Seems you do not have an connections</div>;
-    }
+    return <div className="m-x-auto m-y-auto">No content yet</div>;
   }
 }
 

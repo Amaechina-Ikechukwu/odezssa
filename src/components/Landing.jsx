@@ -77,7 +77,7 @@ export class Landing extends Component {
             <div>
               <div class="flex flex-col items-center ">
                 <h1 className="text-5xl lg:text-8xl">find what you need</h1>
-                <div className="animate-wiggle bg-gradient-to-r from-red-light to-blue-light h-3 w-full  m-10 " />
+                <div className="animate-wiggle bg-gradient-to-r from-red-light to-blue-light h-3 w-full rounded-md m-10 " />
                 <h3 className="text-4xl  lg:text-7xl ">
                   RATHER, CREATE YOUR OWN STORE...
                 </h3>
@@ -87,7 +87,7 @@ export class Landing extends Component {
             <div class="flex flex-col items-center justify-center w-full  ">
               <button
                 onClick={() => this.googlesign()}
-                className="h-10 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-b from-grad to-black"
+                className="h-10 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-r from-blue-300 to-blue-400"
               >
                 <h1 class="text-white text-4xl p-4  flex items-center justify-center">
                   connect with google

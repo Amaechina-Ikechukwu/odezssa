@@ -159,19 +159,31 @@ export class Profile extends Component {
               </div>
               <div className="flex justify-around w-full h-full mb-2">
                 <p className="w-3/5">Country </p>{" "}
-                <p className="w-1/5"> {user.country}</p>
+                <p className="w-1/5">
+                  {" "}
+                  {user === undefined ? "" : user.country}
+                </p>
               </div>
               <div className="flex justify-around w-full mb-2">
                 <p className="w-3/5">State </p>
-                <p className="w-1/5 break-words"> {user.state}</p>
+                <p className="w-1/5 break-words">
+                  {" "}
+                  {user === undefined ? "" : user.state}
+                </p>
               </div>
               <div className="flex justify-around w-full mb-2">
                 <p className="w-3/5">Phone </p>{" "}
-                <p className="w-1/5"> {user.phoneNumber}</p>
+                <p className="w-1/5">
+                  {" "}
+                  {user === undefined ? "" : user.phoneNumber}
+                </p>
               </div>
               <div className="flex justify-around w-full mb-2">
                 <p className="w-3/5">Address </p>{" "}
-                <p className="w-1/5"> {user.address}</p>
+                <p className="w-1/5">
+                  {" "}
+                  {user === undefined ? "" : user.address}
+                </p>
               </div>
             </Box>
             <Box className="h-full flex flex-col items-end text-gray-400 p-2">
@@ -196,7 +208,7 @@ export class Profile extends Component {
           sclose={() => {
             this.setState({ open: false });
           }}
-          user={this.state.user}
+          user={this.state.user !== {} ? this.state.user : null}
         />
       </Box>
     );

@@ -4,7 +4,7 @@ import { Avatar, Button, Modal } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { ArrowNarrowRightIcon } from "@heroicons/react/outline";
 import { app } from "../../firebase";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore, onSnapshot } from "firebase/firestore";
 
 import {
   BrowserRouter as Router,
@@ -39,22 +39,44 @@ const style = {
 
 export default function UpdateProfile({ sopen, sclose, user }) {
   var profile = getAuth().currentUser;
+  console.log(user);
   //   var profile = useSelector((state) => state.profile.value[0]);
+  // let user = {};
 
+  const getUsers = () => {
+    const db = getFirestore(app);
+    onSnapshot(doc(db, "users", getAuth().currentUser.uid), (doc) => {
+      // this.setState({ user: doc.data() });
+      // setUser(doc.data());
+      // console.log("Current data: ", user);
+      // setCountry(user.country);
+      // setState(user.state);
+      // setAddress(user.address);
+      // setPhone(user.phoneNumber);
+    });
+  };
+  // const [user, setUser] = useState({});
   const [fullName, setFullName] = useState(profile.displayName);
   const [Email, setEmail] = useState(profile.email);
-  const [country, setCountry] = useState(user.country);
-  const [state, setState] = useState(user.state);
+  const [country, setCountry] = useState(
+    user === undefined ? "" : user.country
+  );
+  const [state, setState] = useState(user === undefined ? "" : user.state);
   const [image, setImage] = useState(profile.photoURL);
-  const [address, setAddress] = useState(user.address);
-  const [uri, setUri] = useState("");
-  const [phone, setPhone] = useState(user.phoneNumber);
+  const [address, setAddress] = useState(
+    user === undefined ? "" : user.address
+  );
+  const [uri, setUri] = useState(profile.photoURL);
+  const [phone, setPhone] = useState(
+    user === undefined ? "" : user.phoneNumber
+  );
   const [load, setLoad] = useState("");
-  const [error, seterror] = useState("");
+  const [errorr, setErrorr] = useState("");
   const onPick = (event) => {
     setImage(event.target.files[0]);
     uploadImage(event);
   };
+
   const uploadImage = (e) => {
     e.preventDefault();
     const storage = getStorage(app);
@@ -121,13 +143,28 @@ export default function UpdateProfile({ sopen, sclose, user }) {
   const db = getFirestore(app);
   const pushToFirestore = () => {
     setDoc(doc(db, "users", profile.uid), {
-      country: country,
-      state: state,
-      address: address,
-      phoneNumber: phone,
+      country: `${country == undefined ? user.country : country}`,
+      state: `${state == undefined ? user.state : state}`,
+      address: `${address == undefined ? user.address : address}`,
+      phoneNumber: `${phone == undefined ? user.phoneNumber : phone}`,
     }).then(() => {
       sclose();
     });
+  };
+
+  const required = (e) => {
+    if (phone === "") {
+      setErrorr("please enter phone field");
+    } else if (country === "") {
+      setErrorr("Please fill the country field");
+    } else if (state === "") {
+      setErrorr("Please fill the state field");
+    } else if (address === "") {
+      setErrorr("Please fill the address field");
+    } else {
+      setErrorr("");
+      submit(e);
+    }
   };
 
   const submit = (e) => {
@@ -147,11 +184,18 @@ export default function UpdateProfile({ sopen, sclose, user }) {
         // ...
         pushToFirestore();
         console.log("done");
+        setErrorr("");
       })
       .catch((error) => {
         console.log(error);
+        setErrorr("error, please re-enter the fields and try again");
       });
   };
+
+  React.useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
   return (
     <Modal
       open={sopen}
@@ -192,7 +236,7 @@ export default function UpdateProfile({ sopen, sclose, user }) {
               variant="outlined"
               margin="normal"
               fullWidth
-              defaultValue={country}
+              defaultValue={user === undefined ? "" : user.country}
               onChange={(e) => setCountry(e.target.value)}
             />
 
@@ -202,7 +246,7 @@ export default function UpdateProfile({ sopen, sclose, user }) {
               variant="outlined"
               margin="normal"
               fullWidth
-              defaultValue={state}
+              defaultValue={user === undefined ? "" : user.state}
               onChange={(e) => setState(e.target.value)}
             />
 
@@ -212,7 +256,7 @@ export default function UpdateProfile({ sopen, sclose, user }) {
               variant="outlined"
               margin="normal"
               fullWidth
-              defaultValue={address}
+              defaultValue={user === undefined ? "" : user.address}
               onChange={(e) => setAddress(e.target.value)}
             />
             <TextField
@@ -221,7 +265,8 @@ export default function UpdateProfile({ sopen, sclose, user }) {
               variant="outlined"
               margin="normal"
               fullWidth
-              defaultValue={phone}
+              required
+              defaultValue={user === undefined ? "" : user.phoneNumber}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
@@ -230,7 +275,7 @@ export default function UpdateProfile({ sopen, sclose, user }) {
             <div className=" w-full flex flex-col items-center">
               <Avatar
                 sx={{ width: 120, height: 120 }}
-                src={uri ? uri : image}
+                src={uri !== "" ? uri : image}
               />
 
               <div className="w-full bg-yellow-100  text-yellow-600 p-2 rounded-md mt-1">
@@ -268,10 +313,17 @@ export default function UpdateProfile({ sopen, sclose, user }) {
                   error, please press Upload button
                 </div>
               ) : null} */}
+              <div>
+                {errorr !== "" ? (
+                  <div className="w-full bg-red-100  text-red-600 p-2 rounded-md mt-1">
+                    {errorr}
+                  </div>
+                ) : null}
+              </div>
 
               <button
-                onClick={submit}
-                className="h-10 rounded-lg  p-8 mt-14 flex items-center justify-evenly bg-gradient-to-r from-red-light to-blue-light"
+                onClick={required}
+                className="h-10 rounded-lg  p-8 mt-8 flex items-center justify-evenly  bg-gradient-to-r from-blue-300 to-blue-400"
               >
                 <h1 class="text-white text-2xl md:text-4xl  ">
                   complete update

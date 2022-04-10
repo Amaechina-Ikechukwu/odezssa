@@ -23,6 +23,7 @@ import { ViewListIcon } from "@heroicons/react/solid";
 import { ChatIcon } from "@heroicons/react/solid";
 import { ClipboardListIcon, PhoneIcon } from "@heroicons/react/outline";
 import { Link, NavLink, useHistory } from "react-router-dom";
+import { getAuth } from "firebase/auth";
 
 const style = {
   position: "absolute",
@@ -61,183 +62,25 @@ export class SideBar extends Component {
   state = {};
   render() {
     return (
-      <Box className=" p-2 lg:border-x-2 flex flex-row   lg:flex-col items-center justify-around  md:items-center    ">
-        <Box className=" flex flex-col justify start ">
+      <Box className=" p-1 lg:border-x-1 flex  w-40  flex-col items-center justify-center  h-full hidden md:hidden lg:block  ">
+        <Box className=" flex flex-col justify-start ">
           <h1 className=" font-bold text-3xl md:text-3xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-light to-blue-light">
-            odezssa
+            Promos
           </h1>
         </Box>
-        <Box className=" flex lg:flex-col items-center justify-end lg:justify-evenly h-full   w-full">
-          <Box className="md:block lg:hidden ">
-            <Tabs aria-label="icon tabs example" indicatorColor="disabled">
-              <Tab
-                sx={{ borderWidth: "none" }}
-                icon={
-                  <MenuAlt1Icon
-                    width={20}
-                    // color={!value ? "rgba(0,0,0,.65)" : "rgba(0,0,0,.25)"}
-                  />
-                }
-                aria-label="phone"
-              />
-              <Tab
-                icon={
-                  <SearchIcon
-                    width={20}
-                    // color={value ? "rgba(0,0,0,.65)" : "rgba(0,0,0,.25)"}
-                  />
-                }
-                aria-label="favorite"
-              />
-            </Tabs>
-          </Box>
-          <Box className="hidden md:hidden lg:block ">
-            <Box className="flex flex-col items-center mb-2 justify-evenly mr-4 w-full mb-2 ">
-              <NavLink
-                activeClassName=" bg-gradient-to-b from-grad to-black hover:bg-gray-300  text-blue-50  p-4 rounded-md flex flex-row justify-evenly w-full mb-2 shadow-md opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
-                to="/home"
-              >
-                <HomeIcon width={20} className=" mr-1 " />
-                <p className="text-1xl font-normal">Home </p>
-              </NavLink>
-              <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly  w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
-                to="/market"
-              >
-                <ShoppingBagIcon width={20} className=" mr-1" />
-                <p className="text-1xl  font-normal">Market </p>
-              </NavLink>
-              <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
-                to="/wishlist"
-              >
-                <ClipboardListIcon width={20} className="mr-1" />
-                <p className="text-1xl  font-normal">Wishlist </p>
-              </NavLink>
-              <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly  w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
-                to="/chats"
-              >
-                <ChatAlt2Icon width={20} className=" mr-1" />
-                <p className="text-1xl  font-normal">Messages </p>
-              </NavLink>
-            </Box>
-          </Box>
-          <Divider></Divider>
-
-          <Box className="p-2 w-full bg-gray-100 rounded-lg w-full mt-3 hidden lg:block">
-            <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
-              log out
-            </button>
-            <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
-              settings
-            </button>
-          </Box>
-
-          <NavLink to="/user/profile">
-            <Box
-              display="flex"
-              flexDirection={"column"}
-              alignItems="center"
-              justifyContent={"center"}
-              className=" rounded-full "
-            >
-              LOL
-            </Box>
-          </NavLink>
-        </Box>
-        <Modal>
-          <Box
-            sx={{
-              ...style,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box className="flex flex-col    ">
-              <NavLink
-                activeClassName=" bg-gradient-to-r from-red-light to-blue-light text-blue-50  p-4 rounded-md flex flex-row justify-center  mb-2"
-                className="hover:bg-gradient-to-r from-red-light to-blue-light hover:text-slate-50 text-gray-400 p-4 rounded-md flex flex-row justify-center items-center mb-2"
-                to="/home"
-              >
-                <HomeIcon width={30} className=" mr-5" />
-                <p className=" font-bold text-3xl">Home </p>
-              </NavLink>
-              <NavLink
-                activeClassName=" bg-gradient-to-r from-red-light to-blue-light text-blue-50  p-4 rounded-md flex flex-row justify-center  mb-2"
-                className="hover:bg-gradient-to-r from-red-light to-blue-light hover:text-slate-50 text-gray-400 p-4 rounded-md flex flex-row justify-center items-center mb-2"
-                to="/market"
-              >
-                <ShoppingBagIcon width={30} className=" mr-5" />
-                <p className=" font-bold text-3xl">Market </p>
-              </NavLink>
-              <NavLink
-                activeClassName=" bg-gradient-to-r from-red-light to-blue-light text-blue-50  p-4 rounded-md flex flex-row justify-center  mb-2"
-                className="hover:bg-gradient-to-r from-red-light to-blue-light hover:text-slate-50 text-gray-400 p-4 rounded-md flex flex-row justify-center items-center mb-2"
-                to="/wishlist"
-              >
-                <ClipboardListIcon width={30} className=" mr-5 " />
-                <p className=" font-bold text-3xl">Wishlist </p>
-              </NavLink>
-              <NavLink
-                activeClassName=" bg-gradient-to-r from-red-light to-blue-light text-blue-50  p-4 rounded-md flex flex-row justify-center  mb-2"
-                className="hover:bg-gradient-to-r from-red-light to-blue-light hover:text-slate-50 text-gray-400 p-4 rounded-md flex flex-row justify-center items-center mb-2"
-                to="/chats"
-              >
-                <ChatAlt2Icon width={30} className=" mr-5" />
-                <p className=" font-bold text-3xl">Messages </p>
-              </NavLink>
-              <Divider></Divider>
-              <Box className="p-2 w-full bg-gray-200 shadow-inner shadow-lg rounded-lg mt-3">
-                <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
-                  log out
-                </button>
-              </Box>
-            </Box>
-          </Box>
-        </Modal>
-        <Modal
-          aria-labelledby="parent-modal-title"
-          aria-describedby="parent-modal-description"
-          className="bg-gray-700"
-        >
-          <Box
-            sx={{
-              ...styles,
-              width: 400,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <p className="text-2xl font-bold text-gray-400 mb-2">
-              We've noticed you haven't created a profile.... :)
-            </p>
-
-            <h2
-              className="text-2xl  text-gray-400 mb-2"
-              id="parent-modal-title"
-            >
-              SIGN UP
-            </h2>
-            <div class="flex flex-col items-center justify-center   w-full  h-2/5 mt-7 ">
-              <button className="h-10 rounded-lg w-full p-10 mb-2  flex items-center justify-center bg-gradient-to-b from-grad to-black">
-                <Link to="/shopper">
-                  <h1 class="text-white text-5xl ">shopper</h1>
-                </Link>
-              </button>
-
-              <button className="h-10 rounded-lg w-full p-10 mt-2 flex items-center justify-center bg-gradient-to-r from-red-light to-blue-light">
-                <Link to="/seller">
-                  <h1 class="text-white text-5xl  ">seller</h1>
-                </Link>
-              </button>
+        <Box className="  bg-gradient-to-b from-blue-300 to-blue-500 rounded-md p-1 shadow-md flex flex-col  ">
+          <Box className="w-full flex flex-col ">
+            <div className=" text-white mb-3 ">
+              hey y'all, I've got some discount for you all
+            </div>
+            <div className=" flex justify-end text-left w-full mt-3">
+              <div className="flex flex-col items-end">
+                <Avatar src={getAuth().currentUser.photoURL}> Luke</Avatar>
+                <h2 className=" text-white text-left">zara sales</h2>
+              </div>
             </div>
           </Box>
-        </Modal>
+        </Box>
       </Box>
     );
   }

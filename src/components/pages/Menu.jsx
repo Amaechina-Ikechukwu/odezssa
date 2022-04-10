@@ -11,14 +11,21 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+
 import {
   ChatAlt2Icon,
   HomeIcon,
   MenuAlt1Icon,
   SearchCircleIcon,
   SearchIcon,
-} from "@heroicons/react/solid";
-import { ShoppingBagIcon } from "@heroicons/react/solid";
+} from "@heroicons/react/outline";
+import { ShoppingBagIcon } from "@heroicons/react/outline";
 import { ViewListIcon } from "@heroicons/react/solid";
 import { ChatIcon } from "@heroicons/react/solid";
 import { ClipboardListIcon, PhoneIcon } from "@heroicons/react/outline";
@@ -28,6 +35,7 @@ import {
   useHistory,
   useNavigate,
   Navigate,
+  useNavigationType,
 } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 
@@ -60,23 +68,42 @@ const styles = {
   borderRadius: 5,
   backgroundColor: "white",
 };
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
       redirect: true,
+      open: false,
     };
   }
 
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClickClose = () => {
+    this.setState({ open: false });
+  };
+
+  active =
+    "hover:text-blue-300 bg-white  text-gray-700  p-4  flex flex-row justify-evenly w-36 mb-2  opacity-80";
+  inactive =
+    " hover:text-lg text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2";
+
   googlesignout = () => {
+    const { navigation } = this.props;
+
     var auth = getAuth();
     signOut(auth)
       .then((mssg) => {
         console.log(mssg);
         // Sign-out successful.
 
-        this.state.redirect && <Navigate to="/" replace={true} />;
+        window.location.assign("/");
       })
       .catch((error) => {
         console.log(error);
@@ -84,7 +111,7 @@ export class Menu extends Component {
   };
   render() {
     return (
-      <Box className=" p-2 lg:border-r-2 flex flex-row   lg:flex-col items-center justify-around  md:items-center    ">
+      <Box className=" p-2 lg:border-r-2 flex flex-row bg-slate-50  lg:flex-col items-center justify-around  md:items-center  lg:w-36  ">
         <Box className=" flex flex-col justify start ">
           <h1 className=" font-bold text-3xl md:text-3xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-light to-blue-light">
             odezssa
@@ -117,32 +144,36 @@ export class Menu extends Component {
           <Box className="hidden md:hidden lg:block ">
             <Box className="flex flex-col items-center mb-2 justify-evenly mr-4 w-full mb-2 ">
               <NavLink
-                activeClassName=" bg-gradient-to-b from-grad to-black hover:bg-gray-300  text-blue-50  p-4 rounded-md flex flex-row justify-evenly w-full mb-2 shadow-md opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
-                to="/home"
+                className={({ isActive }) =>
+                  isActive ? this.active : this.inactive
+                }
+                to="/"
               >
                 <HomeIcon width={20} className=" mr-1 " />
                 <p className="text-1xl font-normal">Home </p>
               </NavLink>
               <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly  w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
+                className={({ isActive }) =>
+                  isActive ? this.active : this.inactive
+                }
                 to="/market"
               >
                 <ShoppingBagIcon width={20} className=" mr-1" />
                 <p className="text-1xl  font-normal">Market </p>
               </NavLink>
               <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
+                className={({ isActive }) =>
+                  isActive ? this.active : this.inactive
+                }
                 to="/wishlist"
               >
                 <ClipboardListIcon width={20} className="mr-1" />
                 <p className="text-1xl  font-normal">Wishlist </p>
               </NavLink>
               <NavLink
-                activeClassName="bg-gradient-to-b from-grad to-black text-blue-50  p-4 rounded-md flex flex-row justify-evenly  w-full mb-2 opacity-80"
-                className="hover:bg-gray-100 hover:text-gray-400 text-gray-400 p-4 rounded-md flex flex-row justify-evenly items-center w-full mb-2"
+                className={({ isActive }) =>
+                  isActive ? this.active : this.inactive
+                }
                 to="/chats"
               >
                 <ChatAlt2Icon width={20} className=" mr-1" />
@@ -154,15 +185,38 @@ export class Menu extends Component {
 
           <Box className="p-2 w-full bg-gray-100 rounded-lg w-full mt-3 hidden lg:block">
             <button
-              onClick={() => this.googlesignout()}
-              className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full "
+              onClick={() => this.handleClickOpen()}
+              className="hover: hover:text-red-500 text-red-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full "
             >
               log out
             </button>
-            <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
+            <button className="hover:bg-gray-100 hover:text-yellow-500 text-yellow-300 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
               settings
             </button>
           </Box>
+          <Dialog
+            open={this.state.open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={() => this.handleClickClose()}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle>{"Leaving odezssa :( ?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Continue log-out? Odezssa is still here for you :)
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                onClick={() => this.handleClickClose()}
+              >
+                Stay
+              </Button>
+              <Button onClick={() => this.googlesignout()}>Log Out</Button>
+            </DialogActions>
+          </Dialog>
 
           <NavLink to="/profile">
             <Box
@@ -172,7 +226,14 @@ export class Menu extends Component {
               justifyContent={"center"}
               className=" rounded-full "
             >
-              LOL
+              <Avatar
+                src={getAuth().currentUser.photoURL}
+                alt="AI"
+                className="h-24 w-24"
+              />
+              <p className="truncate flex items-center justify-center">
+                {getAuth().currentUser.displayName.substring(0, 6)}...
+              </p>
             </Box>
           </NavLink>
         </Box>

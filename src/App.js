@@ -97,38 +97,36 @@ function App() {
 
   if (user) {
     return (
-      <Provider store={store}>
-        <BrowserRouter>
-          <div className="flex flex-col lg:flex-row lg:justify-between w-full h-screen">
-            <Menu />
-            <div className="overflow-auto w-full">
-              {isConnected === false ? (
-                <div className="bg-red-300 p-1 md:p-2 rounded-md">
-                  <p className="text-red-600 text-xs md:text-sm">
-                    {" "}
-                    not connected, it will automatically in a few seconds
-                    connect once there is internet (one of our security measures
-                    to keep your activity safe)
-                  </p>{" "}
-                </div>
-              ) : null}
-              <Routes>
-                <Route path="/" element={<Home />} />
+      <BrowserRouter>
+        <div className="flex flex-col lg:flex-row lg:justify-between w-full h-screen">
+          <Menu />
+          <div className="overflow-auto w-full">
+            {isConnected === false ? (
+              <div className="bg-red-300 p-1 md:p-2 rounded-md">
+                <p className="text-red-600 text-xs md:text-sm">
+                  {" "}
+                  not connected, it will automatically in a few seconds connect
+                  once there is internet (one of our security measures to keep
+                  your activity safe)
+                </p>{" "}
+              </div>
+            ) : null}
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/market" element={<Market />} />
-                <Route path="/vprofile" element={<VisitProfile />} />
-              </Routes>
-            </div>
-
-            <div className="w-40">
-              <SideBar />
-            </div>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/market" element={<Market />} />
+              <Route path="/vprofile" element={<VisitProfile />} />
+            </Routes>
           </div>
-        </BrowserRouter>
-      </Provider>
+
+          <div className="w-40">
+            <SideBar />
+          </div>
+        </div>
+      </BrowserRouter>
     );
-  } else if (user === null) {
+  } else if (!user) {
     return (
       <BrowserRouter>
         <Routes>
@@ -138,30 +136,6 @@ function App() {
     );
   }
   return <div>Loading</div>;
-  // return user === false ? (
-
-  // ) : (
-  //   <BrowserRouter>
-  //     <Routes>
-  //       <Route path="/welcome" element={<Landing />} />
-  //     </Routes>
-  //   </BrowserRouter>
-  // );
-  // return user == null ? (
-  //   <BrowserRouter>
-  //     <Routes>
-  //       <Route path="/" element={<Landing />} />
-  //     </Routes>
-  //   </BrowserRouter>
-  // ) : (
-  //   <BrowserRouter>
-  //     <Routes>
-  //       <Route path="/" element={<Home />} />
-
-  //       <Route path="/profile" element={<Profile />} />
-  //     </Routes>
-  //   </BrowserRouter>
-  // );
 }
 
 export default App;

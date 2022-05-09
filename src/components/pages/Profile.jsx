@@ -9,15 +9,20 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import { getAuth } from "firebase/auth";
 import UpdateProfile from "./UpdateProfile";
+import ShowStories from "./Stories/ShowStories";
+import ViewProducts from "../products/ViewProducts";
 import {
   doc,
   getDoc,
   getFirestore,
   collection,
   onSnapshot,
+  query,
+  getDocs,
 } from "firebase/firestore";
 import { app } from "../../firebase";
 import { connect } from "../logics/checkConnect";
+import { getDatabase, ref, onValue, set, get, child } from "firebase/database";
 
 export class Profile extends Component {
   constructor(props) {
@@ -25,6 +30,13 @@ export class Profile extends Component {
     this.state = {
       open: false,
       user: {},
+      products: [],
+      story: [],
+      productModal: false,
+      storyModal: false,
+      sellers: Number,
+      customers: Number,
+      modalOpen: {},
     };
   }
 
@@ -36,40 +48,82 @@ export class Profile extends Component {
     });
   };
 
-  // getUser = async () => {
-  //   const db = getFirestore(app);
-  //   const userRef = collection(db, "users");
+  getStore = () => {
+    const db = getFirestore(app);
+    const q = query(collection(db, "products"));
+    let list = [];
+    let catt = [];
+    const unsubcribe = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        let products = {};
+        products = doc.data();
 
-  //   const docRef = onSnapshot(doc(userRef, getAuth().currentUser.uid));
-  //   console.log(getAuth().currentUser.uid);
-  //   const docSnap = await getDoc(docRef);
-  //   console.log(docSnap.exists);
-  //   if (docSnap.exists) {
-  //     console.log("Document data:", docSnap.data());
-  //     this.setState({ user: docSnap.data() });
-  //   } else {
-  //     // doc.data() will be undefined in this case
-  //     console.log("No such document!");
-  //   }
-  // };
+        if (products.id === getAuth().currentUser.uid) {
+          list.push(products);
+        }
+      });
+
+      this.setState({ products: list });
+    });
+  };
+
+  checkMyStories = async () => {
+    const db = getFirestore(app);
+    const q = query(
+      collection(db, "users", getAuth().currentUser.uid, "stories")
+    );
+    let list = [];
+    let stories = [];
+    let err = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      let haveStories = {};
+      haveStories = doc.data();
+      stories.push(haveStories);
+    });
+
+    let irish = [...new Set(stories)];
+    this.setState({ story: irish });
+  };
+  iSuscribed = () => {
+    var dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${getAuth().currentUser.uid}/ suscribedTo`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          this.setState({ sellers: snapshot.size });
+          console.log(snapshot);
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  hasSuscribers = () => {
+    var dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${getAuth().currentUser.uid}/ suscribers`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          this.setState({ customers: snapshot.size });
+          console.log(snapshot);
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   componentDidMount() {
-    // const getUser = async () => {
-    //   const db = getFirestore(app);
-    //   const userRef = collection(db, "users");
-
-    //   const docRef = doc(userRef, getAuth().currentUser.uid);
-    //   console.log(getAuth().currentUser.uid);
-    //   const docSnap = await getDoc(docRef);
-    //   console.log(docSnap.exists);
-    //   if (docSnap.exists) {
-    //     console.log("Document data:", docSnap.data());
-    //   } else {
-    //     // doc.data() will be undefined in this case
-    //     console.log("No such document!");
-    //   }
-    // };
+    this.iSuscribed();
     this.getUsers();
+    this.checkMyStories();
+    this.getStore();
+    this.hasSuscribers();
     console.log(connect);
   }
 
@@ -80,6 +134,13 @@ export class Profile extends Component {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
+
+  productModal = (e) => {
+    this.setState({ productModal: true, modalOpen: e });
+  };
+  storyModal = () => {
+    this.setState({ storyModal: false });
+  };
   render() {
     var profile = getAuth().currentUser;
     var user = this.state.user;
@@ -93,19 +154,52 @@ export class Profile extends Component {
             <Box className="flex-col items-center justify-center ">
               <p className="text-6xl text-white"> {profile.displayName}</p>
             </Box>
+            <Box>
+              <Box className="flex gap-5 justify-center items-center">
+                <p className="text-lg text-white font-medium">
+                  Suscribed To: {this.state.sellers}{" "}
+                  {this.state.sellers > 1 ? "sellers" : "seller"}
+                </p>
+                <p className="text-lg text-white font-medium">
+                  Customers:
+                  {this.state.customers === 0 || this.state.customers === NaN
+                    ? ` ${0}`
+                    : ` ${this.state.customers}`}
+                </p>
+              </Box>
+            </Box>
           </Box>
         </Box>
-        <Box
-          className="mt-1 bg-gradient-to-r from-red-light to-blue-light"
-          sx={{
-            flexGrow: 1,
-            padding: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Tabs
+
+        {/* <Box height={"55vh"} sx={{ overflow: "auto" }}>
+        <Box className="flex">
+          <Box bgcolor={"white"} height={"100px"} padding={2}>
+
+          </Box>
+        </Box>
+      </Box> */}
+
+        {/* //////////////////////////////////////////////////////////////////////////////////////////////// */}
+        <Box className=".card md:p-2 flex-col items-center justify-center  md:justify-start">
+          <Divider className="mt-2">
+            <Avatar
+              sx={{ width: "150px", height: "150px" }}
+              className=" my-2"
+              alt="AI"
+              src={profile.photoURL}
+            />
+          </Divider>
+          <Box
+            className="flex flex-col gap-4 "
+            // sx={{
+            //   flexGrow: 1,
+            //   padding: "10px",
+            //   display: "flex",
+            //   alignItems: "center",
+            //   justifyContent: "center",
+            // }}
+          >
+            {/* <Tabs
             bgcolor="lightgreen"
             // value={value}
             // onChange={handleChange}
@@ -126,26 +220,92 @@ export class Profile extends Component {
             <Tab label={<p className="text-white text-2xl">Purchases</p>} />
             <Tab label={<p className="text-white text-2xl">Info</p>} />
             <Tab label={<p className="text-white text-2xl">Info</p>} />
-          </Tabs>
-        </Box>
-        {/* <Box height={"55vh"} sx={{ overflow: "auto" }}>
-        <Box className="flex">
-          <Box bgcolor={"white"} height={"100px"} padding={2}>
+          </Tabs> */}
+            <Box className="p-2">
+              <p className="font-bold text-gray-500">
+                Use Cases{" "}
+                <p className="font-medium text-gray-400"> Products in use</p>
+              </p>
+              <Box
+                style={{ overflow: "auto" }}
+                className="flex flex-row p-1 items-center gap-2  "
+              >
+                {this.state.story.map((c) => (
+                  <div
+                    onClick={() => this.setState({ storyModal: true })}
+                    className="h-3/4 w-36  rounded-md"
+                  >
+                    <img
+                      className="rounded-md"
+                      src={c.uri}
+                      style={{ objectSize: "cover", objectPosition: "center" }}
+                    />
+                  </div>
+                ))}
+              </Box>
+              <ShowStories
+                key={Math.random().toString(36).substring(2, 9)}
+                data={this.state.story}
+                name={getAuth().currentUser.displayName}
+                sopen={this.state.storyModal}
+                sclose={this.storyModal}
+              />
+            </Box>
+            <Box className="p-2">
+              <p className="font-bold text-gray-500">Your Categories</p>
+              <Box className="flex flex-row p-1 flex-wrap gap-2 ">
+                {this.state.products.map((c) => (
+                  <p className=" font-medium p-2 rounded-lg border-sm shadow-md text-gray-500 ">
+                    {c.catergory}
+                  </p>
+                ))}
+              </Box>
+            </Box>
 
+            <Box className="bg-slate-50 h-full p-2 bg-white grid grid-cols-2  justify-center   md:grid-cols-2  lg:grid-cols-3  gap-2">
+              {this.state.products.map((product, index) => (
+                <Box className="">
+                  <Box
+                    key={`${Math.random().toString(36).substring(2, 9)}odezssa`}
+                    onClick={() => this.productModal(product)}
+                    className="  lg:w-full rounded-md p-2 bg-white shadow-md "
+                  >
+                    <div className="  h-max ">
+                      <div className="font-bold text-gray-500">
+                        {product.pName}
+                      </div>
+                      <div>
+                        {" "}
+                        <p className="font-medium text-gray-500 text-md  ">
+                          {product.descrip}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <img
+                        className="rounded-md b-2 "
+                        src={product.uri}
+                        style={{
+                          objectFit: "contain ",
+                          height: "320px",
+                          objectPosition: "center",
+                          width: "320px",
+                        }}
+                      />
+                    </div>
+                  </Box>
+                </Box>
+              ))}
+              <ViewProducts
+                products={this.state.modalOpen}
+                isOpen={this.state.productModal}
+                isClose={() => {
+                  this.setState({ productModal: false });
+                }}
+              />
+            </Box>
           </Box>
-        </Box>
-      </Box> */}
 
-        {/* //////////////////////////////////////////////////////////////////////////////////////////////// */}
-        <Box className=".card md:p-2 flex-col items-center justify-center  md:justify-start">
-          <Divider className="mt-2">
-            <Avatar
-              sx={{ width: "150px", height: "150px" }}
-              className=" my-2"
-              alt="AI"
-              src={profile.photoURL}
-            />
-          </Divider>
           <div className="px-1">
             <div className="bg-yellow-100 text-yellow-400 p-2 rounded-md">
               Only you can see this info

@@ -87,9 +87,9 @@ export class Landing extends Component {
             <div class="flex flex-col items-center justify-center w-full  ">
               <button
                 onClick={() => this.googlesign()}
-                className="h-10 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-r from-blue-300 to-blue-400"
+                className="lg:h-10 md:h-8 h-3 rounded-lg w-full p-10   flex items-center justify-center bg-gradient-to-r from-blue-300 to-blue-400"
               >
-                <h1 class="text-white text-4xl p-4  flex items-center justify-center">
+                <h1 class="text-white lg:text-4xl text-lg md:text-3xl p-4  flex items-center justify-center">
                   connect with google
                 </h1>
               </button>

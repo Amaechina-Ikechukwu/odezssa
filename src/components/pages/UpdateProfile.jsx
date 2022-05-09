@@ -147,6 +147,8 @@ export default function UpdateProfile({ sopen, sclose, user }) {
       state: `${state == undefined ? user.state : state}`,
       address: `${address == undefined ? user.address : address}`,
       phoneNumber: `${phone == undefined ? user.phoneNumber : phone}`,
+      displayName: getAuth().currentUser.displayName,
+      photoURL: getAuth().currentUser.photoURL,
     }).then(() => {
       sclose();
     });

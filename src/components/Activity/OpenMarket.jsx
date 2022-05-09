@@ -16,15 +16,6 @@ import {
 import MenuItem from "@mui/material/MenuItem";
 import PropTypes from "prop-types";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Link,
-  Redirect,
-  useHistory,
-} from "react-router-dom";
-
 import React, { useState } from "react";
 import { getAuth, updateProfile } from "firebase/auth";
 import {
@@ -80,7 +71,7 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function OpenMarket({ sopen, sclose, cury }) {
+export default function OpenMarket({ sopen, sclose, cury, call }) {
   var profile = getAuth().currentUser;
 
   //   var profile = useSelector((state) => state.profile.value[0]);
@@ -88,15 +79,7 @@ export default function OpenMarket({ sopen, sclose, cury }) {
 
   const getUsers = () => {
     const db = getFirestore(app);
-    onSnapshot(doc(db, "users", getAuth().currentUser.uid), (doc) => {
-      // this.setState({ user: doc.data() });
-      // setUser(doc.data());
-      // console.log("Current data: ", user);
-      // setCountry(user.country);
-      // setState(user.state);
-      // setAddress(user.address);
-      // setPhone(user.phoneNumber);
-    });
+    onSnapshot(doc(db, "users", getAuth().currentUser.uid), (doc) => {});
   };
   // const [user, setUser] = useState({});
   const [pName, setPName] = useState("");
@@ -193,47 +176,6 @@ export default function OpenMarket({ sopen, sclose, cury }) {
 
   // Add a new document in collection "cities"
   const db = getFirestore(app);
-  // const pushToFirestore = () => {
-  //   setDoc(doc(db, "products", profile.uid), {
-  //     discount,
-  //     price,
-  //     id,
-  //     descrip,
-  //     catergory,
-  //     stock,
-  //     uri,
-  //     pName,
-  //   }).then(() => {
-  //     sclose();
-  //   });
-  // };
-
-  // const required = (e, downloadURL) => {
-  //   if (pName === "") {
-  //     setErrorr("please enter product name field");
-  //   } else if (price === "" && price.length >= 8 && price === isNaN) {
-  //     setErrorr("Please check the price field");
-  //   } else if (descrip === "") {
-  //     setErrorr("Please fill the descrip field");
-  //   } else if (catergory === "") {
-  //     setErrorr("Please fill the catergory field");
-  //   } else if (stock === "" && stock === isNaN && stock.length >= 6) {
-  //     setErrorr("Please check the stock field");
-  //   } else if (image === "") {
-  //     setErrorr("select an image field");
-  //   } else if (cur === "") {
-  //     setErrorr("select a currency ");
-  //   } else if (
-  //     discount === "" &&
-  //     discount.length >= 100 &&
-  //     discount === isNaN
-  //   ) {
-  //     setErrorr("Please check the discount field");
-  //   } else {
-  //     setErrorr("");
-  //     submit(e, downloadURL);
-  //   }
-  // };
 
   const required = (e, downloadURL) => {
     if (pName === "") {
@@ -285,7 +227,7 @@ export default function OpenMarket({ sopen, sclose, cury }) {
       stock,
       uri: downloadURL,
       pName,
-      uName: name,
+      uName: profile.displayName,
       uPhoto: profile.photoURL,
     })
       .then(() => {
@@ -303,6 +245,7 @@ export default function OpenMarket({ sopen, sclose, cury }) {
         setUri("");
         setImage("");
         sclose();
+        call();
         setCurr(false);
       })
       .catch((error) => {
@@ -347,7 +290,7 @@ export default function OpenMarket({ sopen, sclose, cury }) {
 
   React.useEffect(() => {
     getUsers();
-  }, [getUsers]);
+  });
 
   const handleToggle = () => {
     setCurr(!curr);
@@ -360,7 +303,7 @@ export default function OpenMarket({ sopen, sclose, cury }) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={style} className="  rounded-md">
         {" "}
         <div className=" text-blue-400  rounded-md text-3xl">
           Add Product, commence sales

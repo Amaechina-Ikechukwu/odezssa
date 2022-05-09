@@ -78,6 +78,7 @@ export class Menu extends Component {
     this.state = {
       redirect: true,
       open: false,
+      modalOpen: false,
     };
   }
 
@@ -87,6 +88,14 @@ export class Menu extends Component {
 
   handleClickClose = () => {
     this.setState({ open: false });
+  };
+
+  handleMClickOpen = () => {
+    this.setState({ modalOpen: true });
+  };
+
+  handleMClickClose = () => {
+    this.setState({ modalOpen: false });
   };
 
   active =
@@ -111,35 +120,25 @@ export class Menu extends Component {
   };
   render() {
     return (
-      <Box className=" p-2 lg:border-r-2 flex flex-row bg-slate-50  lg:flex-col items-center justify-around  md:items-center  lg:w-36  ">
+      <Box className=" p-2 lg:border-r-2 flex flex-row shadow-md lg:bg-slate-50  lg:flex-col items-center justify-around  md:items-center  lg:w-36  ">
         <Box className=" flex flex-col justify start ">
           <h1 className=" font-bold text-3xl md:text-3xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-red-light to-blue-light">
             odezssa
           </h1>
         </Box>
-        <Box className=" flex lg:flex-col items-center justify-end lg:justify-evenly h-full   w-full">
+        <Box className=" flex lg:flex-col items-center justify-end lg:justify-evenly h-full gap-2  w-full">
           <Box className="md:block lg:hidden ">
-            <Tabs aria-label="icon tabs example" indicatorColor="disabled">
-              <Tab
-                sx={{ borderWidth: "none" }}
-                icon={
-                  <MenuAlt1Icon
-                    width={20}
-                    // color={!value ? "rgba(0,0,0,.65)" : "rgba(0,0,0,.25)"}
-                  />
-                }
-                aria-label="phone"
+            <button
+              className="p-1 shadow-md rounded-md h-12 w-12 flex items-center justify-center"
+              onClick={() => this.handleMClickOpen()}
+            >
+              {" "}
+              <MenuAlt1Icon
+                width={25}
+                className="text-black font-bold"
+                // color={!value ? "rgba(0,0,0,.65)" : "rgba(0,0,0,.25)"}
               />
-              <Tab
-                icon={
-                  <SearchIcon
-                    width={20}
-                    // color={value ? "rgba(0,0,0,.65)" : "rgba(0,0,0,.25)"}
-                  />
-                }
-                aria-label="favorite"
-              />
-            </Tabs>
+            </button>
           </Box>
           <Box className="hidden md:hidden lg:block ">
             <Box className="flex flex-col items-center mb-2 justify-evenly mr-4 w-full mb-2 ">
@@ -237,7 +236,10 @@ export class Menu extends Component {
             </Box>
           </NavLink>
         </Box>
-        <Modal>
+        <Modal
+          open={this.state.modalOpen}
+          onClose={() => this.handleMClickClose()}
+        >
           <Box
             sx={{
               ...style,
@@ -245,11 +247,14 @@ export class Menu extends Component {
               justifyContent: "center",
             }}
           >
-            <Box className="flex flex-col    ">
+            <Box
+              className="flex flex-col   "
+              onClick={() => this.handleMClickClose()}
+            >
               <NavLink
                 activeClassName=" bg-gradient-to-r from-red-light to-blue-light text-blue-50  p-4 rounded-md flex flex-row justify-center  mb-2"
                 className="hover:bg-gradient-to-r from-red-light to-blue-light hover:text-slate-50 text-gray-400 p-4 rounded-md flex flex-row justify-center items-center mb-2"
-                to="/home"
+                to="/"
               >
                 <HomeIcon width={30} className=" mr-5" />
                 <p className=" font-bold text-3xl">Home </p>
@@ -280,49 +285,14 @@ export class Menu extends Component {
               </NavLink>
               <Divider></Divider>
               <Box className="p-2 w-full bg-gray-200 shadow-inner shadow-lg rounded-lg mt-3">
-                <button className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full ">
+                <button
+                  onClick={() => this.handleClickOpen()}
+                  className="hover:bg-gray-100 hover:text-slate-50 text-gray-400 p-2 rounded-md flex flex-row justify-evenly items-center w-full "
+                >
                   log out
                 </button>
               </Box>
             </Box>
-          </Box>
-        </Modal>
-        <Modal
-          aria-labelledby="parent-modal-title"
-          aria-describedby="parent-modal-description"
-          className="bg-gray-700"
-        >
-          <Box
-            sx={{
-              ...styles,
-              width: 400,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <p className="text-2xl font-bold text-gray-400 mb-2">
-              We've noticed you haven't created a profile.... :)
-            </p>
-
-            <h2
-              className="text-2xl  text-gray-400 mb-2"
-              id="parent-modal-title"
-            >
-              SIGN UP
-            </h2>
-            <div class="flex flex-col items-center justify-center   w-full  h-2/5 mt-7 ">
-              <button className="h-10 rounded-lg w-full p-10 mb-2  flex items-center justify-center bg-gradient-to-b from-grad to-black">
-                <Link to="/shopper">
-                  <h1 class="text-white text-5xl ">shopper</h1>
-                </Link>
-              </button>
-
-              <button className="h-10 rounded-lg w-full p-10 mt-2 flex items-center justify-center bg-gradient-to-r from-red-light to-blue-light">
-                <Link to="/seller">
-                  <h1 class="text-white text-5xl  ">seller</h1>
-                </Link>
-              </button>
-            </div>
           </Box>
         </Modal>
       </Box>

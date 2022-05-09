@@ -13,6 +13,10 @@ import Home from "./components/pages/Home";
 import Profile from "./components/pages/Profile";
 import { app } from "./firebase";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/reducers";
+import thunk from "redux-thunk";
 
 import {
   getDatabase,
@@ -30,6 +34,8 @@ import VisitProfile from "./components/products/VisitProfile";
 
 function App() {
   const [user, setUser] = React.useState();
+
+  const store = createStore(rootReducer, applyMiddleware(thunk));
   const [isConnected, setIsConnected] = React.useState(Boolean);
   React.useEffect(() => {
     console.log(app);
@@ -91,34 +97,36 @@ function App() {
 
   if (user) {
     return (
-      <BrowserRouter>
-        <div className="flex flex-col lg:flex-row justify-between h-screen">
-          <Menu />
-          <div className="overflow-auto w-full">
-            {isConnected === false ? (
-              <div className="bg-red-300 p-2 rounded-md">
-                <p className="text-red-600 text-sm">
-                  {" "}
-                  not connected, it will automatically in a few seconds connect
-                  once there is internet (one of our security measures to keep
-                  your activity safe)
-                </p>{" "}
-              </div>
-            ) : null}
-            <Routes>
-              <Route path="/" element={<Home />} />
+      <Provider store={store}>
+        <BrowserRouter>
+          <div className="flex flex-col lg:flex-row lg:justify-between w-full h-screen">
+            <Menu />
+            <div className="overflow-auto w-full">
+              {isConnected === false ? (
+                <div className="bg-red-300 p-1 md:p-2 rounded-md">
+                  <p className="text-red-600 text-xs md:text-sm">
+                    {" "}
+                    not connected, it will automatically in a few seconds
+                    connect once there is internet (one of our security measures
+                    to keep your activity safe)
+                  </p>{" "}
+                </div>
+              ) : null}
+              <Routes>
+                <Route path="/" element={<Home />} />
 
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/market" element={<Market />} />
-              <Route path="/vprofile" element={<VisitProfile />} />
-            </Routes>
-          </div>
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/market" element={<Market />} />
+                <Route path="/vprofile" element={<VisitProfile />} />
+              </Routes>
+            </div>
 
-          <div className="w-40">
-            <SideBar />
+            <div className="w-40">
+              <SideBar />
+            </div>
           </div>
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </Provider>
     );
   } else if (user === null) {
     return (

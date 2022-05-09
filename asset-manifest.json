@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/odezssa/static/css/main.d39c8b8f.css",
-    "main.js": "/odezssa/static/js/main.048bd66e.js",
+    "main.js": "/odezssa/static/js/main.dfd3a8e5.js",
     "static/js/787.3aac65fe.chunk.js": "/odezssa/static/js/787.3aac65fe.chunk.js",
     "static/media/odes.png": "/odezssa/static/media/odes.02efaecf231f70e87cfb.png",
     "index.html": "/odezssa/index.html",
     "main.d39c8b8f.css.map": "/odezssa/static/css/main.d39c8b8f.css.map",
-    "main.048bd66e.js.map": "/odezssa/static/js/main.048bd66e.js.map",
+    "main.dfd3a8e5.js.map": "/odezssa/static/js/main.dfd3a8e5.js.map",
     "787.3aac65fe.chunk.js.map": "/odezssa/static/js/787.3aac65fe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d39c8b8f.css",
-    "static/js/main.048bd66e.js"
+    "static/js/main.dfd3a8e5.js"
   ]
 }

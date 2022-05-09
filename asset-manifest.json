@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Amaechina-Ikechukwu/odezssa/static/css/main.1b75bbcd.css",
+    "main.js": "/Amaechina-Ikechukwu/odezssa/static/js/main.1dd950fa.js",
+    "static/js/787.3aac65fe.chunk.js": "/Amaechina-Ikechukwu/odezssa/static/js/787.3aac65fe.chunk.js",
+    "static/media/odes.png": "/Amaechina-Ikechukwu/odezssa/static/media/odes.02efaecf231f70e87cfb.png",
+    "index.html": "/Amaechina-Ikechukwu/odezssa/index.html",
+    "main.1b75bbcd.css.map": "/Amaechina-Ikechukwu/odezssa/static/css/main.1b75bbcd.css.map",
+    "main.1dd950fa.js.map": "/Amaechina-Ikechukwu/odezssa/static/js/main.1dd950fa.js.map",
+    "787.3aac65fe.chunk.js.map": "/Amaechina-Ikechukwu/odezssa/static/js/787.3aac65fe.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1b75bbcd.css",
+    "static/js/main.1dd950fa.js"
+  ]
+}
